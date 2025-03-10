@@ -1,48 +1,6 @@
 import UIKit
 
-class CarouselCell: UICollectionViewCell {
-    static let reuseIdentifier = "CarouselCell"
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .green
-        self.layer.cornerRadius = 8
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class GridCell: UICollectionViewCell {
-    static let reuseIdentifier = "GridCell"
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .blue
-        self.layer.cornerRadius = 8
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class TwoByTwoGridCell: UICollectionViewCell {
-    static let reuseIdentifier = "TwoByTwoGridCell"
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .orange
-        self.layer.cornerRadius = 8
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class ViewController: UIViewController {
+class CompViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case carousel
         case grid
@@ -87,7 +45,7 @@ class ViewController: UIViewController {
     func createCarouselSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+        item.contentInsets = .init(top: 0, leading: 8, bottom: 8, trailing: 8)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.8))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
