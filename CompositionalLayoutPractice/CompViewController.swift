@@ -26,6 +26,8 @@ class CompViewController: UIViewController {
         collectionView.register(CarouselCell.self, forCellWithReuseIdentifier: CarouselCell.reuseIdentifier)
         collectionView.register(GridCell.self, forCellWithReuseIdentifier: GridCell.reuseIdentifier)
         collectionView.register(TwoByTwoGridCell.self, forCellWithReuseIdentifier: TwoByTwoGridCell.reuseIdentifier)
+        
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.reuseIdentifier)
     }
     
     func createCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -53,6 +55,7 @@ class CompViewController: UIViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.interGroupSpacing = 10
+        section.boundarySupplementaryItems = [createSectionHeader()]
         return section
     }
     
@@ -65,6 +68,7 @@ class CompViewController: UIViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [createSectionHeader()]
         return section
     }
     
@@ -77,7 +81,21 @@ class CompViewController: UIViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [createSectionHeader()]
         return section
+    }
+    
+    func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(50)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        return header
     }
     
     func configureDataSource() {
@@ -95,6 +113,30 @@ class CompViewController: UIViewController {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TwoByTwoGridCell.reuseIdentifier, for: indexPath)
                 return cell
             }
+        }
+        
+        dataSource.supplementaryViewProvider = { (collectionView, kind, indexPath) -> UICollectionReusableView? in
+            guard kind == UICollectionView.elementKindSectionHeader else {
+                return nil
+            }
+            let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: HeaderView.reuseIdentifier,
+                for: indexPath
+            ) as! HeaderView
+            
+            let section = Section.allCases[indexPath.section]
+            
+            switch section {
+            case .carousel:
+                header.setTitle("Carousel")
+            case .grid:
+                header.setTitle("Grid")
+            case .twoByTwoGrid:
+                header.setTitle("TwoByTwoGrid")
+            }
+            
+            return header
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
